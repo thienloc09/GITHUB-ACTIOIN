@@ -22,6 +22,7 @@ jobs:
       - run: echo "🍏 This job's status is ${{ job.status }}."
   build:
     runs-on: ubuntu-latest
+    environtment: developer
     steps:
       # Checkout the Source code from the latest commit
       - uses: actions/checkout@v3
@@ -38,10 +39,10 @@ jobs:
           sfdx force --help
       - name: Decrypt the server.key.enc file & store inside assets folder
         run: |
-          openssl enc -nosalt -aes-256-cbc -d -in assets/server.key.enc -out assets/server.key -base64 -K 8AFF59B1C88DEA257B911B882A7BA3849703B68E1E0E832CC38E871F5A873179 -iv ECA7202A78B0D8E54A501A7108CBA6EA
+          openssl enc -nosalt -aes-256-cbc -d -in ${{ secrets.ENCRYPTION_KEY_FILE }} -out ${{ secrets.JWT_KEY_FILE }} -base64 -K ${{ secrets.DECRYPTION_KEY }} -iv ${{ secrets.DECRYPTION_IV }}
       - name: Authenticate Salesforce ORG
         run: |
-          sfdx force:auth:jwt:grant -i 3MVG9pRzvMkjMb6nNxIg9QMXyoKQOMi3ueNU1wlFras0fES4l4RkBaNaNUSmQWmE01Y8tdqzA.dhr8oVynINR -f assets/server.key --username ttloc@devorg.com -d -a DevOrg
+          sfdx force:auth:jwt:grant -i ${{ secrets.HUB_CONSUMER_KEY }} -f ${{ secrets.JWT_KEY_FILE }} --username ${{ secrets.HUB_USER_NAME }} -d -a DevOrg --instanceurl ${{ secrets.HUB_LOGIN_URL }}
       - name: Validate Source Code Against Salesforce ORG
         run: |
           sfdx force:source:deploy -p force-app -c -u DevOrg
