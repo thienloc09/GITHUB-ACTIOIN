@@ -22,7 +22,7 @@ jobs:
       - run: echo "🍏 This job's status is ${{ job.status }}."
   build:
     runs-on: ubuntu-latest
-    environtment: developer
+    environtment: Devorg CMC
     steps:
       # Checkout the Source code from the latest commit
       - uses: actions/checkout@v3
