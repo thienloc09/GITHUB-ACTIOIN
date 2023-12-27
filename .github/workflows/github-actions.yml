@@ -42,7 +42,7 @@ jobs:
           openssl enc -nosalt -aes-256-cbc -d -in ${{ secrets.ENCRYPTION_KEY_FILE }} -out ${{ secrets.JWT_KEY_FILE }} -base64 -K ${{ secrets.DECRYPTION_KEY }} -iv ${{ secrets.DECRYPTION_IV }}
       - name: Authenticate Salesforce ORG
         run: |
-          sfdx force:auth:jwt:grant -i ${{ secrets.HUB_CONSUMER_KEY }} -f ${{ secrets.JWT_KEY_FILE }} --username ${{ secrets.HUB_USER_NAME }} -d -a DevOrg --instanceurl ${{ secrets.HUB_LOGIN_URL }}
+          sfdx force:auth:jwt:grant -i ${{ secrets.HUB_CONSUMER_KEY }} -f ${{ secrets.JWT_KEY_FILE }} --username ${{ secrets.HUB_USER_NAME }} -d -a DevOrg -r ${{ secrets.HUB_LOGIN_URL }}
       - name: Validate Source Code Against Salesforce ORG
         run: |
           sfdx force:source:deploy -p force-app -c -u DevOrg
