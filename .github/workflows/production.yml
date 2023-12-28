@@ -77,8 +77,8 @@ jobs:
       # Validate components to Salesforce
       - name: Validate components to Salesforce
         run: |
-          sf project deploy validate --manifest delta/package/package.xml --test-level RunLocalTests -u DevOrg --coverage-formatters clover
+          sf project deploy validate --manifest delta/package/package.xml --test-level RunLocalTests -o DevOrg --coverage-formatters clover
       # Deploy Delta components to Salesofrce
       - name: Deploy Delta components to Salesofrce
         run: |
-          sf project deploy start -x delta/package/package.xml -c -l RunLocalTests -u DevOrg
+          sf project deploy start -x delta/package/package.xml -c -l RunLocalTests -o DevOrg
