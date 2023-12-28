@@ -1,9 +1,10 @@
-name: GitHub Actions Demo
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+name: Production Pipeline
+run-name: ${{ github.actor }} is running pipeline on ${{ github.repository }}
 on:
-  push:
+  pull_request:
+    types: [closed]
     branches:
-      - feature/*
+      - main
     paths:
       - "force-app/**"
 jobs:
@@ -24,7 +25,7 @@ jobs:
       - run: echo "🍏 This job's status is ${{ job.status }}."
   build:
     runs-on: ubuntu-latest
-    environment: Devorg CMC
+    environment: Devorg ttloc
     steps:
       # Checkout the Source code from the latest commit
       - name: Check out repository code
