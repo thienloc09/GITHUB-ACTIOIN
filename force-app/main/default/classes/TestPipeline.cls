@@ -7,5 +7,6 @@ public with sharing class TestPipeline {
     System.debug('aaaaaa!!!!');
     System.debug('aaaaaa!!!!');
     System.debug('aaaaaa!!!!');
+    System.debug('aaaaaa!!!!');
   }
 }
