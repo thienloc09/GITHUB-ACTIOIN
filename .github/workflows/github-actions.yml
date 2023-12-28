@@ -38,8 +38,8 @@ jobs:
       # Install the SFDX CLI using npm command
       - name: Install the SFDX CLI
         run: |
-          npm install sfdx-cli --global
-          sfdx force --help
+          npm install @salesforce/cli --global
+          sf force --help
       # Decrypt file server key for authen
       - name: Decrypt the server.key.enc file & store inside assets folder
         run: |
@@ -47,8 +47,8 @@ jobs:
       # Authenticate Salesforce org
       - name: Authenticate Salesforce ORG
         run: |
-          sfdx force:auth:jwt:grant -i ${{ secrets.HUB_CONSUMER_KEY }} -f ${{ secrets.JWT_KEY_FILE }} --username ${{ secrets.HUB_USER_NAME }} -d -a DevOrg -r ${{ secrets.HUB_LOGIN_URL }}
+          sf force:auth:jwt:grant -i ${{ secrets.HUB_CONSUMER_KEY }} -f ${{ secrets.JWT_KEY_FILE }} --username ${{ secrets.HUB_USER_NAME }} -d -a DevOrg -r ${{ secrets.HUB_LOGIN_URL }}
       # Validate change on org
       - name: Validate Source Code Against Salesforce ORG
         run: |
-          sfdx force:source:deploy -p force-app -c -u DevOrg
+          sf force:source:deploy -p force-app -c -u DevOrg

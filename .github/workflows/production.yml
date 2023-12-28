@@ -39,12 +39,12 @@ jobs:
       # Install the SFDX CLI using npm command
       - name: Install the SFDX CLI
         run: |
-          npm install sfdx-cli --global
-          sfdx force --help
+          npm install @salesforce/cli --global
+          sf force --help
       # Install sfdx-git-delta plugin
       - name: Install the sfdx-git-delta plugin
         run: |
-          echo 'y' | sfdx plugins:install sfdx-git-delta
+          echo 'y' | sf plugins:install sfdx-git-delta
       # Decrypt file server key for authen
       - name: Decrypt the server.key.enc file & store inside assets folder
         run: |
@@ -52,15 +52,23 @@ jobs:
       # Authenticate Salesforce org
       - name: Authenticate Salesforce ORG
         run: |
-          sfdx force:auth:jwt:grant -i ${{ secrets.HUB_CONSUMER_KEY }} -f ${{ secrets.JWT_KEY_FILE }} --username ${{ secrets.HUB_USER_NAME }} -d -a DevOrg -r ${{ secrets.HUB_LOGIN_URL }}
+          sf force:auth:jwt:grant -i ${{ secrets.HUB_CONSUMER_KEY }} -f ${{ secrets.JWT_KEY_FILE }} --username ${{ secrets.HUB_USER_NAME }} -d -a DevOrg -r ${{ secrets.HUB_LOGIN_URL }}
       # Generate the package.xml file
       - name: Generate the package.xml for delta files
         run: |
           mkdir delta
-          sfdx sgd:source:delta --to "HEAD" --from "HEAD~1" --output "./delta" --ignore-whitespace -d -i .sgdignore
+          sf sgd:source:delta --to "HEAD" --from "HEAD~1" --output "./delta" --ignore-whitespace -d -i .sgdignore
           echo "--- package.xml generated with added and modified metadata ---"
           cat delta/package/package.xml
+      # Install SFDX CLI Scanner
+      - name: Install the SFDX CLI Scanner
+        run: |
+          echo 'y' | sf plugins:install @salesforce/sfdx-scanner
+      # Run SFDX CLI Scanner
+      - name: Run SFDX CLI Scanner
+        run: |
+          sf scanner:run -f html -t "force-app" -e "eslint,retire-js,pmd,cpd" -c "Design,Best Practices,Code Style,Performance,Security" --outfile ./reports/scan-reports.html
       # Deploy Delta components to Salesofrce
       - name: Deploy Delta components to Salesofrce
         run: |
-          sfdx force:source:deploy -x delta/package/package.xml -c -l RunLocalTests -u DevOrg
+          sf project deploy start -x delta/package/package.xml -c -l RunLocalTests -u DevOrg
